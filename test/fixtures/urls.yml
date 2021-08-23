@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: MyString
+  slug: MyString
+  original_url: MyString
+  expiration: 2021-08-23 11:53:16
+
+two:
+  user_id: MyString
+  slug: MyString
+  original_url: MyString
+  expiration: 2021-08-23 11:53:16
