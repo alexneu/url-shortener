@@ -1,10 +1,10 @@
 class UrlsController < ApplicationController
-  before_action :verify_authentication, only: [:index, :show, :update, :destroy]
+  skip_before_action :authorized, only: [:create]
   before_action :set_url, only: [:show, :update, :destroy]
 
   # GET /urls
   def index
-    @urls = Url.where(user_id: @user.id)
+    @urls = Url.where(user_id: current_user.id)
 
     render json: @urls
   end
@@ -16,9 +16,8 @@ class UrlsController < ApplicationController
 
   # POST /urls
   def create
-    create_params = url_params
-    url_params.merge!(user_id: @user.id) if @user_id
-    @url = Url.new(create_params)
+    url_params[:user_id] = current_user.id if logged_in?
+    @url = Url.new(Url.prep_params(url_params))
 
     if @url.save
       render json: @url, status: :created, location: @url
@@ -38,23 +37,15 @@ class UrlsController < ApplicationController
 
   # DELETE /urls/1
   def destroy
-    # Only let users destroy urls that they own
-    render json: { errors: "Unauthenticated" }, :status => 401 unless @user
     @url.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_url
       @url = Url.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def url_params
       params.require(:url).permit(:slug, :original_url, :expiration)
-    end
-
-    def verify_authentication
-      render json: { errors: "Unauthenticated" }, :status => 401 unless @user
     end
 end
