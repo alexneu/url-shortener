@@ -2,8 +2,13 @@ require 'digest/md5'
 
 class Url < ApplicationRecord
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   MAX_SLUG_LENGTH = 32
+  RANDOM_SLUG_LENGTH = 6 
+  # 64^6 = 69 billion records. 
+  # Will probably start to see conflicts after a couple million records due to "Birthday Problem" logic, so we implemented some retries in the controller, 
+  # and we can always add more characters to the slug, with each one reducing the chance of a conflict by 64X.
 
   # Expiration is a string representing timestamp seconds_since_epoch
   field :expiration, type: Time, default: ->{ Time.now + 2.years }
@@ -20,21 +25,19 @@ class Url < ApplicationRecord
 
   class << self
     # Convert expiration from unix epoch timestamp to ruby Time class
-    # Remove non-allowed characters from client slug, or generate one with MD5 base64 hashing and truncation
-    def prep_params(params)
-      params[:expiration] = Time.at(params[:expiration].to_i) if params[:expiration]
-      # Base64 digest, replace problematic url characters.
-      if params[:slug]
-        params[:slug].gsub!(/[^0-9a-zA-Z\-\_]/i, '')
-      else
-        params[:slug] = generate_slug(params[:original_url]) unless params[:slug]
-      end
-      params
+    # Remove problematic user-chosen url characters.
+    def prep_user_slug(params)
+      params[:slug].gsub!(/[^0-9a-zA-Z\-\_]/i, '')
     end
 
+    def prep_random_slug(params)
+      params[:slug] = generate_slug(params[:original_url])
+    end
+
+    # Randomly generated MD5 base64 digest, truncated, replace + and / since those can't go in url
     def generate_slug(url)
       nonced_url = url + Time.now.strftime("%s")
-      Digest::MD5.base64digest(nonced_url)[0...8].gsub('/', '+').gsub('-', '_')
+      Digest::MD5.base64digest(nonced_url)[0...(RANDOM_SLUG_LENGTH-1)].gsub('/', '+').gsub('-', '_')
     end
   end
 end
