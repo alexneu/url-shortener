@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   get '/profile', to: 'users#profile'
   
   resources :urls
-  match '*path', to: 'redirect_controller#redirect_from_slug_to_url', via: :all
+  match '*path', to: 'redirect#redirect_from_slug_to_url', via: :all
 end
