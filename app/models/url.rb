@@ -37,7 +37,7 @@ class Url < ApplicationRecord
     # Randomly generated MD5 base64 digest, truncated, replace + and / since those can't go in url
     def generate_slug(url)
       nonced_url = url + Time.now.strftime("%s")
-      Digest::MD5.base64digest(nonced_url)[0...(RANDOM_SLUG_LENGTH-1)].gsub('/', '+').gsub('-', '_')
+      Digest::MD5.base64digest(nonced_url)[0..(RANDOM_SLUG_LENGTH-1)].gsub('/', '+').gsub('-', '_')
     end
   end
 end
