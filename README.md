@@ -1,5 +1,5 @@
 # README
-**Alex Neuhausen's Goldbelly URL Shortener Project
+**Alex Neuhausen's Goldbelly URL Shortener Project**
 
 ## Configuration
 Rails 6.1.4.1 running on Ruby 2.7.3 with a MongoDB Database implemented with Mongo v2.15 Ruby Driver gem and the Mongoid ODM v7.0.13 gem
@@ -20,8 +20,7 @@ spring start (Needed on every change to db configuration, sometimes Mongo doesn'
 Start server: rails s
 
 ### Running The Test Suite
-
-
+bundle exec rspec
 
 ## Notes on Implementation
 
@@ -32,7 +31,7 @@ A few observations about the nature of the data we will store:
 3. There are no relationships between records—other than storing which user created a URL.
 4. Our service is read-heavy.
 
-We need two tables: one for storing information about the URL mappings and one for the user’s data who created the short link.
+We need two tables: one for storing information about the URL mappings and one for the user’s data who created the short link, to enable updating/deleting/index view of a user's urls.
 
 At scale, if we anticipate millions or hundreds of millions of urls generated per month, thus billions of rows and pretty minimal relationships between objects (just matching urls to a given user), a NoSQL store like MongoDB makes more sense. I'm using the mongoid gem to implement MongoDB in Rails. We’re going to build a mostly-restful API because it’s a convention that Rails favors, a URL is a nice restful object (In our case, Create, Read, Delete and Index (for a given user to see all of their custom urls) all make sense. 
 
@@ -50,22 +49,25 @@ Using a simple cache configuration to store recently used slug-redirect_url pair
 Currently set for memcache in production, memory_store in dev. 
 Memory_store would be faster in production, but figure we're planning on some scale and the ability to run multiple server processes.
 
+### Automated Test Suite
+I chose to use Rspec for unit tests because I'm familiar with it. There's test coverage for the CRUD methods for the url model and controller, the create method for the user model and controller, and the auth and redirect controller.
+It would also be nice to implement Rswag integration tests, because you get included documentation and an interactive testing interface, but I ran out of time.
 
 ## Example Usage
-**Test with Chrome Plugin, Advanced REST client. These cover a lot of the test cases in the automated test suite.
+**Test with Chrome Plugin, Advanced REST client. These cover a lot of the test cases in the automated test suite.**
 
-** Unauthenticated users
-1. User-defined slug: Post localhost:3000/urls, JSON body: url: { slug: ‘slug1’, original_url: 'http://www.google.com' } 
-2. User-defined slug with expiration: Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'http://www.google.com’, expiration: ‘2629782086’ } 
-3. Try creating a url with an invalid expiration date in the past, verify you get a meaningful error response. Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'http://www.google.com’, expiration: '1' } 
+### Unauthenticated users
+1. User-defined slug: Post localhost:3000/urls, JSON body: url: { slug: ‘slug1’, original_url: 'http://www.goldbelly.com' } 
+2. User-defined slug with expiration: Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'http://www.goldbelly.com’, expiration: ‘2629782086’ } 
+3. Try creating a url with an invalid expiration date in the past, verify you get a meaningful error response. Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'http://www.goldbelly.com’, expiration: '1' } 
 4. Try creating a duplicate slug, verify you get a meaningful error.
-5. With unauthenticated user, generate a random slug: Post localhost:3000/urls, JSON body { original_url: 'http://www.google.com' } 
+5. With unauthenticated user, generate a random slug: Post localhost:3000/urls, JSON body { original_url: 'http://www.goldbelly.com' } 
 6. Do it again, get a new, different slug.
-7. With unauthenticated user, app-determined slug and invalid url: Post localhost:3000/urls, JSON body { original_url: 'http://www.google.com' }. Verify you get an error.
+7. With unauthenticated user, app-determined slug and invalid url: Post localhost:3000/urls, JSON body { original_url: 'http://www.goldbelly.com' }. Verify you get an error.
 8. Verify that some of the slugs you created actually work: Open a browser tab and visit one of your slugs: localhost:3000/:slug and you should get redirected to the original url.
 9. Verify that one of the random slugs you created actually works.
 
-** Authenticated Users
+### Authenticated Users
 1. Create new user with Post to http://localhost:3000/users, body: user: { username: ‘Alex’, password: ‘mypassword’ }
 2. Get back a jwt like eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNjEyNWEyMTE5ZDc0ZTJjNDhiNmZiYzEyIn0.vZchbjrOzMNAEo8EFjjSdtfRIk8virJXfhIjddg7yvA. Copy that to your notepad.
 3. Also, verify that we set the correct "Last login" time for returned user object.
