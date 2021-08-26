@@ -1,5 +1,4 @@
-# README
-**Alex Neuhausen's URL Shortener**
+# URL Shortener: Back End
 
 ## Configuration
 Rails 6.1.4.1 running on Ruby 2.7.3 with a MongoDB Database implemented with Mongo v2.15 Ruby Driver gem and the Mongoid ODM v7.0.13 gem
