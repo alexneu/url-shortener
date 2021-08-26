@@ -7,7 +7,8 @@ We could have used the latest stable Ruby, version 3.0.2, but it doesn't make an
 ## Setup
 ### Database
 brew tap mongodb/brew  
-brew install mongodb-community@5.0brew services start mongodb-community@5.0  
+brew install mongodb-community@5.0  
+brew services start mongodb-community@5.0  
 The mongoid gem will initialize our tables as needed based on our models  
 
 ### Web Service
