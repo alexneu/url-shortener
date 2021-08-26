@@ -1,5 +1,5 @@
 # README
-**Alex Neuhausen's Goldbelly URL Shortener Project**
+**Alex Neuhausen's URL Shortener**
 
 ## Configuration
 Rails 6.1.4.1 running on Ruby 2.7.3 with a MongoDB Database implemented with Mongo v2.15 Ruby Driver gem and the Mongoid ODM v7.0.13 gem
@@ -57,25 +57,25 @@ It would also be nice to implement Rswag integration tests, because you get incl
 **Test with Chrome Plugin, Advanced REST client. These cover a lot of the test cases in the automated test suite.**
 
 ### Unauthenticated users
-1. User-defined slug: Post localhost:3000/urls, JSON body: url: { slug: ‘slug1’, original_url: 'http://www.goldbelly.com' } 
-2. User-defined slug with expiration: Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'http://www.goldbelly.com’, expiration: ‘2629782086’ } 
-3. Try creating a url with an invalid expiration date in the past, verify you get a meaningful error response. Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'http://www.goldbelly.com’, expiration: '1' } 
+1. User-defined slug: Post localhost:3000/urls, JSON body: url: { slug: ‘slug1’, original_url: 'https://www.goldbelly.com' } 
+2. User-defined slug with expiration: Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'https://www.goldbelly.com’, expiration: ‘2629782086’ } 
+3. Try creating a url with an invalid expiration date in the past, verify you get a meaningful error response. Post localhost:3000/urls, JSON body { slug: ‘slug2’, original_url: 'https://www.goldbelly.com’, expiration: '1' } 
 4. Try creating a duplicate slug, verify you get a meaningful error.
-5. With unauthenticated user, generate a random slug: Post localhost:3000/urls, JSON body { original_url: 'http://www.goldbelly.com' } 
+5. With unauthenticated user, generate a random slug: Post localhost:3000/urls, JSON body { original_url: 'https://www.goldbelly.com' } 
 6. Do it again, get a new, different slug.
-7. With unauthenticated user, app-determined slug and invalid url: Post localhost:3000/urls, JSON body { original_url: 'http://www.goldbelly.com' }. Verify you get an error.
+7. With unauthenticated user, app-determined slug and invalid url: Post localhost:3000/urls, JSON body { original_url: 'https://www.goldbelly.com' }. Verify you get an error.
 8. Verify that some of the slugs you created actually work: Open a browser tab and visit one of your slugs: localhost:3000/:slug and you should get redirected to the original url.
 9. Verify that one of the random slugs you created actually works.
 
 ### Authenticated Users
-1. Create new user with Post to http://localhost:3000/users, body: user: { username: ‘Alex’, password: ‘mypassword’ }
+1. Create new user with Post to https://localhost:3000/users, body: user: { username: ‘Alex’, password: ‘mypassword’ }
 2. Get back a jwt like eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNjEyNWEyMTE5ZDc0ZTJjNDhiNmZiYzEyIn0.vZchbjrOzMNAEo8EFjjSdtfRIk8virJXfhIjddg7yvA. Copy that to your notepad.
 3. Also, verify that we set the correct "Last login" time for returned user object.
 4. Now we can do authenticated requests by putting in a header in our Posts: { 'Authorization': 'Bearer <token>' }
-5. Try posting to http://localhost:3000/urls with our token.
+5. Try posting to https://localhost:3000/urls with our token.
 6. Create a new url, verify it works.
-7. Fetch all of our authenticated user’s urls with the index endpoint, GET http://localhost:3000/urls
-8. Fetch a single authenticated user url with the read endpoint, GET http://localhost:3000/urls/:url_id
-9. Delete a url, DELETE http://localhost:3000/urls/:url_id
+7. Fetch all of our authenticated user’s urls with the index endpoint, GET https://localhost:3000/urls
+8. Fetch a single authenticated user url with the read endpoint, GET https://localhost:3000/urls/:url_id
+9. Delete a url, DELETE https://localhost:3000/urls/:url_id
 10. Verify that if we remove a character from our jwt header, we get a “Please log in” message for the Index, Get, and Delete endpoints.
 11. Remove the header, verify that redirecting from a slug still works for unauthenticated users.

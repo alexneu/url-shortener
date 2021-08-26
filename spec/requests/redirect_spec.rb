@@ -4,7 +4,7 @@ RSpec.describe "Redirects", type: :request do
   describe "GET /anything" do
     context 'url that matches slug' do
       before do
-        @url = Url.create(slug: 'slug1', original_url: 'http://www.goldbelly.com')
+        @url = Url.create(slug: 'slug1', original_url: 'https://www.goldbelly.com')
       end
 
       after do
@@ -13,7 +13,7 @@ RSpec.describe "Redirects", type: :request do
 
       context 'slug is in cache' do
         before do
-          Rails.cache.write('slug1', 'http://www.goldbelly.com')
+          Rails.cache.write('slug1', 'https://www.goldbelly.com')
         end
 
         after do 
@@ -23,7 +23,7 @@ RSpec.describe "Redirects", type: :request do
         it 'redirects to original url' do
           get '/slug1'
           expect(response).to be_redirect
-          expect(response.headers['Location']).to eq('http://www.goldbelly.com')
+          expect(response.headers['Location']).to eq('https://www.goldbelly.com')
         end
       end
 
@@ -31,7 +31,7 @@ RSpec.describe "Redirects", type: :request do
         it 'redirects to original url if slug is not in cache' do
           get '/slug1'
           expect(response).to be_redirect
-          expect(response.headers['Location']).to eq('http://www.goldbelly.com')
+          expect(response.headers['Location']).to eq('https://www.goldbelly.com')
         end
       end
     end

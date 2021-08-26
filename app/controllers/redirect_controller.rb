@@ -8,8 +8,11 @@ class RedirectController < ApplicationController
 
     # Try hitting cache before fetching from database
     redirect_url = Rails.cache.fetch(slug, expires_in: URL_CACHE_EXPIRATION) do
-      @url = Url.find_by(slug: slug) rescue false
-      render json: { error: "Did not find a matching shortened url." }, status: :not_found and return unless @url
+      begin
+        @url = Url.find_by(slug: slug)
+      rescue Mongoid::Errors::DocumentNotFound
+        render json: { error: "Did not find a matching shortened url." }, status: :not_found and return
+      end
       @url.original_url
     end
 

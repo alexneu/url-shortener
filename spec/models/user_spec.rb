@@ -12,21 +12,21 @@ RSpec.describe User, type: :model do
 
   describe '#new' do
     it "is valid with a username and a password" do
-      user = User.create(username: 'Alex', password: 'coolpassword', last_login: Time.now)
+      user = User.create(username: 'alex', password: 'coolpassword', last_login: Time.now)
       expect(user).to be_valid
-      expect(user.username).to eq 'Alex'
+      expect(user.username).to eq 'alex'
       expect(user.last_login).to eq Time.now
     end
 
     it "will not let you create a duplicate username" do
-      user1 = User.create(username: 'Alex', password: 'coolpassword2')
-      user2 = User.create(username: 'Alex', password: 'coolpassword')
+      user1 = User.create(username: 'alex', password: 'coolpassword2')
+      user2 = User.create(username: 'alex', password: 'coolpassword')
       expect(user2).to_not be_valid
       user2.destroy
     end
 
     it "will not let you create a duplicate username, case insensitive" do
-      user1 = User.create(username: 'Alex', password: 'coolpassword2')
+      user1 = User.create(username: 'alex', password: 'coolpassword2')
       user2 = User.create(username: 'alex', password: 'coolpassword')
       expect(user2).to_not be_valid
       user2.destroy
