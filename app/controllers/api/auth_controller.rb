@@ -1,9 +1,9 @@
-class AuthController < ApplicationController
+class Api::AuthController < Api::ApiController
   skip_before_action :authorized, only: [:create]
  
   def create
     @user = begin
-      User.find_by(username: user_login_params[:username])
+      Api::User.find_by(username: user_login_params[:username])
     rescue Mongoid::Errors::DocumentNotFound
       nil
     end  

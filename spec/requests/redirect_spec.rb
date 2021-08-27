@@ -4,7 +4,7 @@ RSpec.describe "Redirects", type: :request do
   describe "GET /anything" do
     context 'url that matches slug' do
       before do
-        @url = Url.create(slug: 'slug1', original_url: 'https://www.goldbelly.com')
+        @url = Api::Url.create(slug: 'slug1', original_url: 'https://www.goldbelly.com')
       end
 
       after do

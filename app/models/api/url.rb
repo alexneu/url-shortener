@@ -1,6 +1,6 @@
 require 'digest/md5'
 
-class Url < ApplicationRecord
+class Api::Url < ApplicationRecord
   include Mongoid::Document
   include Mongoid::Timestamps
 
