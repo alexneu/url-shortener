@@ -1,6 +1,4 @@
 class RedirectController < ApplicationController
-  skip_before_action :authorized
-
   URL_CACHE_EXPIRATION = 1.day
 
   def redirect_from_slug_to_url
@@ -9,7 +7,7 @@ class RedirectController < ApplicationController
     # Try hitting cache before fetching from database
     redirect_url = Rails.cache.fetch(slug, expires_in: URL_CACHE_EXPIRATION) do
       begin
-        @url = Url.find_by(slug: slug)
+        @url = Api::Url.find_by(slug: slug)
       rescue Mongoid::Errors::DocumentNotFound
         render json: { error: "Did not find a matching shortened url." }, status: :not_found and return
       end

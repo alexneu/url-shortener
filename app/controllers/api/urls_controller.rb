@@ -1,4 +1,4 @@
-class UrlsController < ApplicationController
+class Api::UrlsController < Api::ApiController
   skip_before_action :authorized, only: [:create]
   before_action :set_url, only: [:show, :update, :destroy]
 
@@ -6,7 +6,7 @@ class UrlsController < ApplicationController
 
   # GET /urls
   def index
-    @urls = Url.where(user_id: current_user.id)
+    @urls = Api::Url.where(user_id: current_user.id)
     render json: @urls
   end
 
@@ -40,7 +40,7 @@ class UrlsController < ApplicationController
   private
   def set_url
     @url = begin
-      Url.where(user_id: current_user.id).find(id: params[:id])
+      Api::Url.where(user_id: current_user.id).find(id: params[:id])
     rescue Mongoid::Errors::DocumentNotFound
       # Purposely render 404 instead of unauthorized if not matching user - don't let attackers know resource exists
       render json: { error: "Did not find a matching shortened url." }, status: :not_found and return
@@ -52,8 +52,8 @@ class UrlsController < ApplicationController
   end
 
   def create_user_slug_url(create_params)
-    Url.prep_user_slug(create_params)
-    @url = Url.new(create_params)
+    Api::Url.prep_user_slug(create_params)
+    @url = Api::Url.new(create_params)
     if @url.save
       render json: @url, status: :created, location: @url
     else
@@ -65,8 +65,8 @@ class UrlsController < ApplicationController
     retries = 0
 
     begin
-      Url.prep_random_slug(create_params)
-      @url = Url.new(create_params)
+      Api::Url.prep_random_slug(create_params)
+      @url = Api::Url.new(create_params)
       if @url.save
         render json: @url, status: :created, location: @url and return  # and return just so we don't forget and put more executable code after this if/else
       else

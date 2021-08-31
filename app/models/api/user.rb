@@ -1,4 +1,4 @@
-class User < ApplicationRecord
+class Api::User < ApplicationRecord
   include Mongoid::Document
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword

@@ -1,9 +1,9 @@
-class UsersController < ApplicationController
+class Api::UsersController < Api::ApiController
   skip_before_action :authorized, only: [:create]
  
   # POST /users
   def create
-    @user = User.create(user_params.merge({last_login: Time.now}))
+    @user = Api::User.create(user_params.merge({last_login: Time.now}))
     if @user.valid?
       @token = encode_token(user_id: @user.id.to_s)
       render json: { user: { username: @user.username }, jwt: @token }, status: :created
