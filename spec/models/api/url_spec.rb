@@ -112,22 +112,22 @@ RSpec.describe Api::Url, type: :model do
 
   describe '#cost' do
     it 'calculates the correct slug cost for goly' do
-      url = Api::Url.new(slug: 'goly', original_url: 'https://www.goldbelly.com', expiration: Time.now + 1.day)
+      url = Api::Url.new(slug: 'goly', original_url: 'https://www.goldbelly.com')
       expect(url.cost).to eq 5
     end
 
     it 'calculates the correct slug cost for oely' do
-      url = Api::Url.new(slug: 'oely', original_url: 'https://www.goldbelly.com', expiration: Time.now + 1.day)
+      url = Api::Url.new(slug: 'oely', original_url: 'https://www.goldbelly.com')
       expect(url.cost).to eq 6
     end
 
     it 'calculates the correct slug cost for gole' do
-      url = Api::Url.new(slug: 'gole', original_url: 'https://www.google.com', expiration: Time.now + 1.day)
+      url = Api::Url.new(slug: 'gole', original_url: 'https://www.google.com')
       expect(url.cost).to eq 6
     end
 
     it 'calculates the correct slug cost for goog' do
-      url = Api::Url.new(slug: 'goog', original_url: 'https://www.google.com', expiration: Time.now + 1.day)
+      url = Api::Url.new(slug: 'goog', original_url: 'https://www.google.com')
       expect(url.cost).to eq 8
     end
   end

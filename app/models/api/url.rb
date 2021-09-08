@@ -70,11 +70,11 @@ class Api::Url < ApplicationRecord
     def letter_cost(letter)
       vowel?(letter) ? 2 : 1
     end
-  
+
     def vowel?(letter)
       'aeiou'.include?(letter)
     end
-  
+
     def characters_incidence_hash(word)
       # This will create a hash for goog like { g: 2, o: 2}
       characters_incidence_hash = {}
