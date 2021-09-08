@@ -109,4 +109,48 @@ RSpec.describe Api::Url, type: :model do
       expect(slug1).to_not eq slug2
     end
   end
+
+  describe '#cost' do
+    it 'calculates the correct slug cost for goly' do
+      url = Api::Url.new(slug: 'goly', original_url: 'https://www.goldbelly.com', expiration: Time.now + 1.day)
+      expect(url.cost).to eq 5
+    end
+
+    it 'calculates the correct slug cost for oely' do
+      url = Api::Url.new(slug: 'oely', original_url: 'https://www.goldbelly.com', expiration: Time.now + 1.day)
+      expect(url.cost).to eq 6
+    end
+
+    it 'calculates the correct slug cost for gole' do
+      url = Api::Url.new(slug: 'gole', original_url: 'https://www.google.com', expiration: Time.now + 1.day)
+      expect(url.cost).to eq 6
+    end
+
+    it 'calculates the correct slug cost for goog' do
+      url = Api::Url.new(slug: 'goog', original_url: 'https://www.google.com', expiration: Time.now + 1.day)
+      expect(url.cost).to eq 8
+    end
+  end
+
+  describe '#suggested_slug' do
+    it 'suggests the cheapest possible slug for goldbelly' do
+      url = Api::Url.new(original_url: 'goldbelly')
+      expect(url.suggested_slug).to eq 'gldb'
+    end
+
+    it 'suggests the cheapest possible slug for google' do
+      url = Api::Url.new(original_url: 'google')
+      expect(url.suggested_slug).to eq 'gloe'
+    end
+
+    it 'suggests the cheapest possible slug for hi' do
+      url = Api::Url.new(original_url: 'hi')
+      expect(url.suggested_slug).to eq 'hihh'
+    end
+
+    it 'suggests the cheapest possible slug for ae' do
+      url = Api::Url.new(original_url: 'ae')
+      expect(url.suggested_slug).to eq 'aeaa'
+    end
+  end
 end
